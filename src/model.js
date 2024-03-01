@@ -13,7 +13,104 @@ module.exports = class Model {
     }
 
 
-     async exec() {
+    async find(filter = {}) {
+        var ex = await this.#exec();
+        return ex.find(filter);
+    }
+
+    async findOne(filter = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.findOne(filter, options);
+    }
+
+    async findOneAndUpdate(filter = {}, update = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.findOneAndUpdate(filter, update, options);
+    }
+
+    async findOneAndDelete(filter = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.findOneAndDelete(filter, options);
+    }
+
+    async findById(id, options = {}) {
+        var ex = await this.#exec();
+        return ex.findById(id, options);
+    }
+
+    async findByIdAndUpdate(id, update = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.findByIdAndUpdate(id, update, options);
+    }
+
+    async findByIdAndDelete(id, options = {}) {
+        var ex = await this.#exec();
+        return ex.findByIdAndDelete(id, options);
+    }
+
+    async insertOne(data, options = {}) {
+        var ex = await this.#exec();
+        return ex.insertOne(data, options);
+    }
+
+    async insertMany(data, options = {}) {
+        var ex = await this.#exec();
+        return ex.insertMany(data, options);
+    }
+
+    async updateOne(filter = {}, update = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.updateOne(filter, update, options);
+    }
+
+    async updateMany(filter = {}, update = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.updateMany(filter, update, options);
+    }
+
+    async deleteOne(filter = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.deleteOne(filter, options);
+    }
+
+    async deleteMany(filter = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.deleteMany(filter, options);
+    }
+
+    async create(data, options = {}) {
+        var ex = await this.#exec();
+        return ex.create(data, options);
+    }
+
+    async save(data) {
+        var ex = await this.#exec();
+        return ex.save(data);
+    }
+
+    async update(filter, update = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.update(filter, update, options);
+    }
+
+    async schemaInfo() {
+        var ex = await this.#exec();
+        return ex.schemaInfo();
+    }
+
+    async dropCollection() {
+        var ex = await this.#exec();
+        return ex.dropCollection();
+    }
+
+    async allRows() {
+        var ex = await this.#exec();
+        return ex.allRows();
+    }
+
+
+
+    async #exec() {
         var collection = this.collection;
         var schema = this.schema;
         var methods = this.methods;
@@ -58,7 +155,6 @@ module.exports = class Model {
         });
 
 
-
         return {
             find: async (filter = {}) => await this.#find(collection, filter, { multi: true }),
             findOne: async (filter = {}, options = {}) => await this.#find(collection, filter, { ...options, multi: false }),
@@ -82,7 +178,6 @@ module.exports = class Model {
             ...methods,
         };
     }
-
 
 
     async #find(collection, filter = {}, options = { multi: true }) {
