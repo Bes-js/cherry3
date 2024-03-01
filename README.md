@@ -40,10 +40,8 @@ const userSchema = Schema({
     date: Types.Date
 });
 
-(async () => {
-
 // Create a model for the "users" collection
-const UserModel = await new Model('Users', userSchema);
+const UserModel = new Model('Users', userSchema);
 
 
 // Example data
@@ -55,6 +53,7 @@ const userData = {
   interests: ['coding', 'reading', 'ertus-mom'],
 };
 
+(async () => {
 // CRUD operations
   try {
     /* SAVE NEW USER */
