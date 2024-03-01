@@ -1,0 +1,54 @@
+{
+    "name": "cherry3",
+    "description": "Cherry3 is a SQlite object modeling tool designed to work in an asynchronous environment.",
+    "homepage": "https://discord.gg/luppux",
+    "version": "1.0.0",
+    "author": {
+        "name": "Bes-js",
+        "url": "https://github.com/Bes-js/cherry3"
+    },
+    "main": "./index.js",
+    "types": "./typings/index.d.ts",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/Bes-js/cherry3/issues"
+      },
+    "funding": {
+        "url": "https://www.paytr.com/link/2qh0pLB?lang=en",
+        "type": "paytr"
+      },
+    "scripts": {
+        "test": "node ./test.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Bes-js/cherry3.git"
+    },
+    "keywords": [
+        "sqlite",
+        "orm",
+        "object",
+        "modeling",
+        "async",
+        "sqlite3",
+        "knex",
+        "typescript",
+        "cherry3",
+        "database",
+        "db",
+        "sql",
+        "mongoose",
+        "sequelize",
+        "typeorm",
+        "local",
+        "storage"
+    ],
+    "devDependencies": {
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.3"
+      },
+    "dependencies": {
+        "knex": "^3.1.0",
+        "sqlite3": "^5.1.7"
+    }
+}
