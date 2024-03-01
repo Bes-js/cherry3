@@ -14,7 +14,14 @@ interface UpdateKeys {
 /**
  * Represents a set of functions for interacting with a database.
  */
-interface Functions {
+
+
+declare class Model {
+    collection: string;
+    schema: object;
+    methods?: object;
+    constructor(collection: string, schema: object, methods?: object);
+
     find(filter: object, options?: { multi?:boolean }): Promise<any[]>;
 
     findOne(filter: object, options?: { multi?:boolean }): Promise<any | null>;
@@ -52,18 +59,6 @@ interface Functions {
     dropCollection(): Promise<any>;
 
     allRows(): Promise<any[]>;
-
-}
-
-
-
-declare class Model {
-    collection: string;
-    schema: object;
-    methods?: object;
-    constructor(collection: string, schema: object, methods?: object);
-
-    exec(): Promise<Functions>;
 
 }
 
