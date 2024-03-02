@@ -12,10 +12,14 @@ module.exports = class Model {
         if (!this.db) throw new Error("Database is required");
     }
 
-
-    async find(filter = {}) {
+    async aggregate(pipeline = []) {
         var ex = await this.#exec();
-        return ex.find(filter);
+        return ex.aggregate(pipeline);
+    }
+
+    async find(filter = {}, options = {}) {
+        var ex = await this.#exec();
+        return ex.find(filter, options);
     }
 
     async findOne(filter = {}, options = {}) {
@@ -53,9 +57,9 @@ module.exports = class Model {
         return ex.insertOne(data, options);
     }
 
-    async insertMany(data, options = {}) {
+    async insertMany(data) {
         var ex = await this.#exec();
-        return ex.insertMany(data, options);
+        return ex.insertMany(data);
     }
 
     async updateOne(filter = {}, update = {}, options = {}) {
@@ -103,9 +107,9 @@ module.exports = class Model {
         return ex.dropCollection();
     }
 
-    async allRows() {
+    async allRows(options = {}) {
         var ex = await this.#exec();
-        return ex.allRows();
+        return ex.allRows(options);
     }
 
 
@@ -122,41 +126,108 @@ module.exports = class Model {
         if (!(await this.db.schema.hasTable(collection))) {
             await this.db.schema.createTable(collection, (table) => {
                 Object.keys(schema).forEach((key, index) => {
-                    var schemaType = typeof schema[key] == "object" ? schema[key]?.type : schema[key];
-                    var defaultValue = typeof schema[key] == "object" ? schema[key]?.default : undefined;
-                    if (index == 0) table.increments("id").unique().defaultTo(0).primary();
-                    if (schemaType == "string") table.string(key).defaultTo(defaultValue);
-                    if (schemaType == "number") table.integer(key).defaultTo(defaultValue);
-                    if (schemaType == "date") table.date(key).defaultTo(defaultValue);
-                    if (schemaType == "text") table.text(key).defaultTo(defaultValue);
-                    if (schemaType == "float") table.float(key).defaultTo(defaultValue);
-                    if (schemaType == "boolean") table.boolean(key).defaultTo(defaultValue);
-                    if (schemaType == "array") table.jsonb(key).defaultTo(defaultValue);
-                    if (schemaType == "object") table.jsonb(key).defaultTo(defaultValue);
+                    var schemaType = typeof schema[key] == "object" ? schema[key]?.type?.toString() : schema[key].toString();
+                    var defaultValue = typeof schema[key] == "object" ? schema[key]?.default : null;
+                    var requiredValue = typeof schema[key] == "object" ? schema[key]?.required : null;
+                    if (index == 0) table.increments("id").primary();
+                    if (schemaType?.includes("String")) {
+                        var stingTable = table.string(key);
+                        if (defaultValue) stingTable.defaultTo(defaultValue);
+                        if (requiredValue == true) stingTable.notNullable();
+                    }
+                    if (schemaType?.includes("Number")) {
+                        var numberTable = table.integer(key);
+                        if (defaultValue) numberTable.defaultTo(defaultValue);
+                        if (requiredValue == true) numberTable.notNullable();
+                    }
+                    if (schemaType?.includes("Date")) {
+                        var dateTable = table.date(key);
+                        if (defaultValue) dateTable.defaultTo(defaultValue);
+                        if (requiredValue == true) dateTable.notNullable();
+                    }
+                    if (schemaType?.includes("Text")) {
+                        var textTable = table.text(key);
+                        if (defaultValue) textTable.defaultTo(defaultValue);
+                        if (requiredValue == true) textTable.notNullable();
+                    }
+                    if (schemaType?.includes("Float")) {
+                        var floatTable = table.float(key);
+                        if (defaultValue) floatTable.defaultTo(defaultValue);
+                        if (requiredValue == true) floatTable.notNullable();
+                    }
+                    if (schemaType?.includes("Boolean")) {
+                        var booleanTable = table.boolean(key);
+                        if (defaultValue) booleanTable.defaultTo(defaultValue);
+                        if (requiredValue == true) booleanTable.notNullable();
+                    }
+                    if (schemaType?.includes("Array")) {
+                        var arrayTable = table.jsonb(key);
+                        if (defaultValue) arrayTable.defaultTo(defaultValue);
+                        if (requiredValue == true) arrayTable.notNullable();
+                    }
+                    if (schemaType?.includes("Object")) {
+                        var objectTable = table.jsonb(key);
+                        if (defaultValue) objectTable.defaultTo(defaultValue);
+                        if (requiredValue == true) objectTable.notNullable();
+                    }
                 });
             });
         };
         new Promise((resolve, reject) => { resolve(setTimeout(() => 500)); });
 
         var collectionInfo = await this.db(collection).columnInfo();
-        Object.keys(schema).forEach(async(key) => {
+        Object.keys(schema).forEach(async (key,index) => {
             if (!collectionInfo[key]) await this.db.schema.table(collection, (table) => {
-                var schemaType = typeof schema[key] == "object" ? schema[key]?.type : schema[key];
-                var defaultValue = typeof schema[key] == "object" ? schema[key]?.default : undefined;
-                if (schemaType == "string") table.string(key).defaultTo(defaultValue);
-                if (schemaType == "number") table.integer(key).defaultTo(defaultValue);
-                if (schemaType == "date") table.date(key).defaultTo(defaultValue);
-                if (schemaType == "text") table.text(key).defaultTo(defaultValue);
-                if (schemaType == "float") table.float(key).defaultTo(defaultValue);
-                if (schemaType == "boolean") table.boolean(key).defaultTo(defaultValue);
-                if (schemaType == "array") table.jsonb(key).defaultTo(defaultValue);
-                if (schemaType == "object") table.jsonb(key).defaultTo(defaultValue);
+                var schemaType = typeof schema[key] == "object" ? schema[key]?.type?.toString() : schema[key].toString();
+                var defaultValue = typeof schema[key] == "object" ? schema[key]?.default : null;
+                var requiredValue = typeof schema[key] == "object" ? schema[key]?.required : null;
+                if (index == 0) table.increments("id").primary();
+                if (schemaType?.includes("String")) {
+                    var stingTable = table.string(key);
+                    if (defaultValue) stingTable.defaultTo(defaultValue);
+                    if (requiredValue == true) stingTable.notNullable();
+                }
+                if (schemaType?.includes("Number")) {
+                    var numberTable = table.integer(key);
+                    if (defaultValue) numberTable.defaultTo(defaultValue);
+                    if (requiredValue == true) numberTable.notNullable();
+                }
+                if (schemaType?.includes("Date")) {
+                    var dateTable = table.date(key);
+                    if (defaultValue) dateTable.defaultTo(defaultValue);
+                    if (requiredValue == true) dateTable.notNullable();
+                }
+                if (schemaType?.includes("Text")) {
+                    var textTable = table.text(key);
+                    if (defaultValue) textTable.defaultTo(defaultValue);
+                    if (requiredValue == true) textTable.notNullable();
+                }
+                if (schemaType?.includes("Float")) {
+                    var floatTable = table.float(key);
+                    if (defaultValue) floatTable.defaultTo(defaultValue);
+                    if (requiredValue == true) floatTable.notNullable();
+                }
+                if (schemaType?.includes("Boolean")) {
+                    var booleanTable = table.boolean(key);
+                    if (defaultValue) booleanTable.defaultTo(defaultValue);
+                    if (requiredValue == true) booleanTable.notNullable();
+                }
+                if (schemaType?.includes("Array")) {
+                    var arrayTable = table.jsonb(key);
+                    if (defaultValue) arrayTable.defaultTo(defaultValue);
+                    if (requiredValue == true) arrayTable.notNullable();
+                }
+                if (schemaType?.includes("Object")) {
+                    var objectTable = table.jsonb(key);
+                    if (defaultValue) objectTable.defaultTo(defaultValue);
+                    if (requiredValue == true) objectTable.notNullable();
+                }
             });
         });
 
 
         return {
-            find: async (filter = {}) => await this.#find(collection, filter, { multi: true }),
+            find: async (filter = {}, options = {}) => await this.#find(collection, filter, { multi: true, ...options }),
             findOne: async (filter = {}, options = {}) => await this.#find(collection, filter, { ...options, multi: false }),
             findOneAndUpdate: async (filter = {}, update = {}, options = {}) => await this.#update(collection, filter, update, { ...options }),
             findOneAndDelete: async (filter = {}, options = {}) => await this.#delete(collection, filter, { ...options, multi: false }),
@@ -164,7 +235,7 @@ module.exports = class Model {
             findByIdAndUpdate: async (id, update = {}, options = {}) => await this.#update(collection, { id }, update, { ...options }),
             findByIdAndDelete: async (id, options = {}) => await this.#delete(collection, { id }, { ...options, multi: false }),
             insertOne: async (data, options = {}) => await this.#create(collection, data, { ...options, multi: false }),
-            insertMany: async (data, options = {}) => await this.#create(collection, data, { ...options, multi: true }),
+            insertMany: async (data) => await this.#create(collection, data, { multi: true }),
             updateOne: async (filter = {}, update = {}, options = {}) => await this.#update(collection, filter, update, { ...options }),
             updateMany: async (filter = {}, update = {}, options = {}) => await this.#update(collection, filter, update, { ...options, multi: true }),
             deleteOne: async (filter = {}, options = {}) => await this.#delete(collection, filter, { ...options }),
@@ -174,11 +245,22 @@ module.exports = class Model {
             update: async (filter, update = {}, options = {}) => await this.#update(collection, filter, update, { ...options, multi: true }),
             schemaInfo: async () => await this.db(collection).columnInfo(),
             dropCollection: async () => await this.db.schema.dropTableIfExists(collection),
-            allRows: async () => await this.#find(collection, {}, { multi: true }),
+            allRows: async (options = {}) => await this.#find(collection, {}, { multi: true, ...options }),
+            aggregate: async (pipeline = []) => await this.#aggregate(pipeline),
             ...methods,
         };
     }
 
+    async #aggregate(pipeline = []) {
+        if (!pipeline) throw new Error("Pipeline is required");
+        if (!Array.isArray(pipeline)) throw new Error("Pipeline must be an array");
+
+        Object.keys(pipeline).forEach((key) => {
+            if (typeof pipeline[key] !== "object") throw new Error("Pipeline must be an array of objects");
+        });
+
+        return (await this.db(this.collection).select().from(this.collection).where(pipeline));
+    }
 
     async #find(collection, filter = {}, options = { multi: true }) {
         if (!collection || typeof collection !== "string" || collection == "") throw new Error("Collection name is required");
@@ -192,7 +274,12 @@ module.exports = class Model {
         });
 
         if (options.multi) {
-            return (await this.db(collection).where(filter)).map((data) => this.#formatReply(data));
+          var returnData = (await this.db(collection).where(filter)).map((data) => this.#formatReply(data))
+          if (options.limit){
+            if(isNaN(options.limit)) throw new Error("Limit must be a number");
+            return returnData.slice(0, options.limit);
+          }
+            return returnData;
         } else {
             return this.#formatReply((await this.db(collection).where(filter).first()));
         }
@@ -385,12 +472,14 @@ module.exports = class Model {
         if (options.multi) {
             var data = (await this.db(collection).where(filter));
             data.forEach(async (element) => {
+                console.log(element);
                 if (!element?.id) return;
                 await this.db(collection).where({ id: element.id }).delete();
             });
             return null;
         } else {
             var data = (await this.db(collection).where(filter).first());
+            console.log(data);
             if (!data?.id) return;
             await this.db(collection).where({ id: data.id }).delete();
             return null;
@@ -403,11 +492,16 @@ module.exports = class Model {
         if (typeof data !== "object") throw new Error("Data must be an object");
         if (typeof options !== "object") throw new Error("Options must be an object");
         var schemaInfo = await this.db(collection).columnInfo();
+        if(options.multi && !Array.isArray(data)) throw new Error("Data must be an array");
+        if(!options.multi){
         Object.keys(data).forEach((key) => {
             if (!schemaInfo[key]) throw new Error(`Field ${key} does not exist in collection ${collection}`);
         });
+        }
         if (options.multi) {
-            return this.#formatReply((await this.db(collection).insert(this.#formatInsert(data))));
+            data?.forEach(async (element) => {
+                return this.#formatReply((await this.db(collection).insert(this.#formatInsert(element))));
+            })
         } else {
             return this.#formatReply((await this.db(collection).insert(this.#formatInsert(data))));
         }
@@ -419,7 +513,7 @@ module.exports = class Model {
 
 
     #formatReply(obj) {
-        if(typeof obj !== "object" || Object.keys(obj).length == 0) return null;
+        if (typeof obj !== "object" || Object.keys(obj).length == 0) return null;
         Object.keys(obj).forEach((key) => {
             if (obj[key]?.toString()?.startsWith("[") && obj[key]?.toString()?.endsWith("]")) {
                 obj[key] = JSON.parse(obj[key]);
@@ -429,7 +523,7 @@ module.exports = class Model {
     }
 
     #formatInsert(obj) {
-        if(typeof obj !== "object" || Object.keys(obj).length == 0) return null;
+        if (typeof obj !== "object" || Object.keys(obj).length == 0) return null;
         Object.keys(obj).forEach((key) => {
             if (Array.isArray(obj[key])) {
                 obj[key] = JSON.stringify(obj[key]);
