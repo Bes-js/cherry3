@@ -5,13 +5,13 @@ const { db, DatabaseInformation } = require('./src/index');
 const Model = require('./src/model');
 
 const Types = {
-    Number: "number",
-    Float: "float",
-    Text: "text",
-    Date: "date",
-    String: "string",
-    Boolean: "boolean",
-    Array: "array",
+    Number: "Number",
+    Float: "Float",
+    Text: "Text",
+    Date: "Date",
+    String: "String",
+    Boolean: "Boolean",
+    Array: "Array",
 };
 
 
@@ -23,11 +23,11 @@ const Types = {
  * @throws {Error} - If the schema is not provided or is not an object, or if a type is missing.
  */
 function Schema(values) {
-    var types = ["number", "float", "text", "date", "string", "boolean", "array"];
-    if (!values) throw new Error("Schema is required");
+    var types = ["Number", "Float", "Text", "Date", "String", "Boolean", "Array","Object"];
+    if (!values) throw new Error("Schema fields is required");
     if (typeof values !== "object") throw new Error("Schema must be an object");
     Object.keys(values).forEach((key) => {
-        if (!types.some(type => values[key] == type || values[key]?.type == type)) throw new Error("Type is required");
+    if (!types.some(type => values[key]?.toString()?.includes(type) || values[key]?.type?.toString()?.includes(type))) throw new Error("Type is required or invalid for '" + values[key] + "' in schema.");
     });
     return values;
 }
