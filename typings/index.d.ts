@@ -13,7 +13,7 @@ import Model from './src/model';
         Array: "array",
     };
 
-    declare function Schema(values: Record<string, any>): Record<string, any>;
+    declare function Schema(values: Record<any, {type?:string,default?:any,required?:boolean}>|Record<any,any>): Record<any, {type?:string,default?:any,required?:boolean}>|Record<any,any>;
     declare function DatabaseInformation():{fileSize:string, lastModified:string, createdAt:string, uid:number} | null;
 
     export { 
