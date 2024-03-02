@@ -9,6 +9,28 @@ interface UpdateKeys {
    $dec?: object;
 }
 
+interface aggregateOptions {
+    $match?: object;
+    $project?: object;
+    $limit?: number;
+    $skip?: number;
+    $unwind?: object;
+    $group?: object;
+    $sort?: object;
+    $count?: string;
+    $lookup?: object;
+    $addFields?: object;
+    $replaceRoot?: object;
+    $sample?: object;
+    $out?: string;
+    $indexStats?: object;
+    $facet?: object;
+    $graphLookup?: object;
+    $bucket?: object;
+    $bucketAuto?: object;
+    $sortByCount?: object;
+
+}
 
 
 /**
@@ -22,7 +44,9 @@ declare class Model {
     methods?: object;
     constructor(collection: string, schema: object, methods?: object);
 
-    find(filter: object, options?: { multi?:boolean }): Promise<any[]>;
+    aggregate(pipeline: object[]): Promise<any[]>;
+
+    find(filter: object, options?: { multi?:boolean, limit?:number }): Promise<any[]>;
 
     findOne(filter: object, options?: { multi?:boolean }): Promise<any | null>;
 
@@ -38,7 +62,7 @@ declare class Model {
 
     insertOne(data: any, options?: { multi?:false }): Promise<any>;
 
-    insertMany(data: any, options?: { multi?:true }): Promise<any>;
+    insertMany(data: object[]): Promise<any>;
 
     updateOne(filter: object, update: UpdateKeys, options?: { upsert?:boolean }): Promise<any | null>;
 
@@ -58,7 +82,7 @@ declare class Model {
 
     dropCollection(): Promise<any>;
 
-    allRows(): Promise<any[]>;
+    allRows(options?:{ limit?:number }): Promise<any[]>;
 
 }
 
