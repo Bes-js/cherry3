@@ -31,11 +31,11 @@ const { Model, Schema, Types } = require('cherry3');
 
 // Define a schema for a collection
 const userSchema = Schema({
-    username: { type: Types.String, default: 'fivesobes' },
+    username: { type: String, default: 'fivesobes' },
     age: Types.Number,
     email: { type: Types.String, default: "support@luppux.com" },
-    isAdmin: Types.Boolean,
-    interests: Types.Array,
+    isAdmin: Boolean,
+    interests: { type: Array, required: true},
     balance: Types.Float,
     date: Types.Date
 });
@@ -60,15 +60,21 @@ const userData = {
 
     // Create or save new user
     await UserModel.save(userData);
+
     await UserModel.create(userData,{multi: true});
+
     await UserModal.insertOne(userData);
-    await UserModal.insertMany(userData);
+
+    await UserModal.insertMany([
+      { username: "piku", age: 19, interests: ["coding"] },
+      { username: "vante", age: 18, interests: ["ertus-mom"] },
+    ]);
 
 
     /* FIND USERS */
 
     // Find multiple users with conditions
-    const users = await UserModel.find({ age: 20, isAdmin: false });
+    const users = await UserModel.find({ age: 20, isAdmin: false },{ limit: 2 });
 
     // Find a single user with conditions
     const user = await UserModel.findOne({ age: 20, isAdmin: false });
@@ -118,7 +124,7 @@ const userData = {
     await UserModel.dropCollection();
 
     // All Schema data
-    await UserModel.AllRows();
+    await UserModel.AllRows({ limit: 3 });
 
 
 
