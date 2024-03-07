@@ -17,6 +17,26 @@
 </p>
 
 #
+## Installation
+
+Using npm:
+```shell
+$ npm install cherry3
+```
+
+Using yarn:
+
+```bash
+$ yarn add cherry3
+```
+
+Using pnpm:
+
+```bash
+$ pnpm add cherry3
+```
+
+#
 ## Features
 
 * **Simple Setup:** Get started quickly with minimal configuration.
