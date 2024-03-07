@@ -7,29 +7,37 @@ interface UpdateKeys {
    $pull?: object;
    $inc?: object;
    $dec?: object;
+   $pullAll?: object;
+   $pushAll?: object;
+   $pop?: object;
 }
 
-interface aggregateOptions {
-    $match?: object;
-    $project?: object;
-    $limit?: number;
-    $skip?: number;
-    $unwind?: object;
-    $group?: object;
-    $sort?: object;
-    $count?: string;
-    $lookup?: object;
-    $addFields?: object;
-    $replaceRoot?: object;
-    $sample?: object;
-    $out?: string;
-    $indexStats?: object;
-    $facet?: object;
-    $graphLookup?: object;
-    $bucket?: object;
-    $bucketAuto?: object;
-    $sortByCount?: object;
+interface findOperators {
+    $gt?: any;
+    $gte?: any;
+    $lt?: any;
+    $lte?: any;
+    $ne?: any;
+    $nin?: any;
+    $in?: any;
+    $and?: any;
+    $not?: any;
+    $nor?: any;
+    $or?: any;
+    $exists?: any;
+    $regex?: any;
+    $nregex?: any;
+    $between?: any;
+    $nbetween?: any;
+    $all?: any;
+    $elementMatch?: any;
+    $size?: any;
+    $ceil?: any;
 
+}
+
+interface ReturnCreateType {
+save:() => Promise<object|null>
 }
 
 
@@ -37,52 +45,53 @@ interface aggregateOptions {
  * Represents a set of functions for interacting with a database.
  */
 
-
 declare class Model {
     collection: string;
     schema: object;
-    methods?: object;
-    constructor(collection: string, schema: object, methods?: object);
+    schemaOptions?: object;
+    constructor(collection: string, schema: object, schemaOptions?: { $timestamps?: boolean, $alter?: boolean  });
 
-    aggregate(pipeline: object[]): Promise<any[]>;
+    find(filter: object | Record<any,findOperators>, options?: { $limit?:number, $skip?:number, $sort?:-1|1 }): Promise<object[] | any[]>;
 
-    find(filter: object, options?: { multi?:boolean, limit?:number }): Promise<any[]>;
+    findOne(filter: object | Record<any,findOperators>): Promise<object | null>;
 
-    findOne(filter: object, options?: { multi?:boolean }): Promise<any | null>;
+    findOneAndUpdate(filter: object | Record<any,findOperators>, update: UpdateKeys, options?: { $upsert?:boolean, $multiPull?:boolean }): Promise<object | null>;
 
-    findOneAndUpdate(filter: object, update: UpdateKeys, options?: { new?:boolean, upsert?:boolean }): Promise<any | null>;
+    findOneAndDelete(filter: object | Record<any,findOperators>, options?: {}): Promise<object | null>;
 
-    findOneAndDelete(filter: object, options?: { multi?:false }): Promise<any | null>;
+    findById(id: number): Promise<object | null>;
 
-    findById(id: any, options?: { }): Promise<any | null>;
+    findByIdAndUpdate(id: number, update: UpdateKeys, options?: { $upsert?:boolean, $multiPull?:boolean }): Promise<object | null>;
 
-    findByIdAndUpdate(id: any, update: UpdateKeys, options?: { new?:boolean, upsert?:boolean }): Promise<any | null>;
+    findByIdAndDelete(id: number): Promise<object | null>;
 
-    findByIdAndDelete(id: any, options?: { multi?:false }): Promise<any | null>;
+    insertOne(data: any, options?: {}): Promise<object | null>;
 
-    insertOne(data: any, options?: { multi?:false }): Promise<any>;
+    insertMany(data: object[]): Promise<object[] | any | null>;
 
-    insertMany(data: object[]): Promise<any>;
+    updateOne(filter: object | Record<any,findOperators>, update: UpdateKeys, options?: { $upsert?:boolean, $multiPull?:boolean }): Promise<object | null>;
 
-    updateOne(filter: object, update: UpdateKeys, options?: { upsert?:boolean }): Promise<any | null>;
+    updateMany(filter: object | Record<any,findOperators>, update: UpdateKeys, options?: { $upsert?:boolean, $multiPull?:boolean }): Promise<object[] | any[] | any | null>;
 
-    updateMany(filter: object, update: UpdateKeys, options?: { upsert?:boolean }): Promise<any[]>;
+    deleteOne(filter: object | Record<any,findOperators>, options?: {}): Promise<object | null>;
 
-    deleteOne(filter: object, options?: { multi?:false }): Promise<any | null>;
+    deleteMany(filter: object | Record<any,findOperators>, options?: {}): Promise<number | null>;
 
-    deleteMany(filter: object, options?: { multi?:true }): Promise<any[]>;
+    create(data: object | any, options?: { $multi?: true }): Promise<{ save: () => Promise<object | null> }>;
 
-    create(data: any, options?: { multi?:true }): Promise<any>;
+    update(filter: object | Record<any,findOperators>, update: UpdateKeys, options?: { $multi?:true, $upsert?:boolean, $multiPull?:boolean }): Promise<object | null>;
 
-    save(data: any): Promise<any>;
+    schemaInfo(): Promise<object>;
 
-    update(filter: object, update: UpdateKeys, options?: { multi?:true, upsert?:boolean }): Promise<any>;
+    dropCollection(): Promise<undefined>;
 
-    schemaInfo(): Promise<any>;
+    renameCollection(newCollectionName: string): Promise<true | Error>;
 
-    dropCollection(): Promise<any>;
+    renameColumn(oldColumnName: string, newColumnName: string): Promise<true | Error>;
 
-    allRows(options?:{ limit?:number }): Promise<any[]>;
+    deleteColumn(columnName: string): Promise<true | Error>;
+
+    allRows(options?:{ $limit?:number, $skip?:number, $sort?:-1|1 }): Promise<object[] | any[]>;
 
 }
 
