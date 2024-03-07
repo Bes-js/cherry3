@@ -1,8 +1,8 @@
 {
     "name": "cherry3",
     "description": "Cherry3 is a SQlite object modeling tool designed to work in an asynchronous environment.",
-    "homepage": "https://discord.gg/luppux",
-    "version": "2.0.2",
+    "homepage": "https://fivesobes.gitbook.io/cherry3/",
+    "version": "3.0.0",
     "author": {
         "name": "Bes-js",
         "url": "https://github.com/Bes-js"
@@ -18,7 +18,7 @@
         "type": "paytr"
     },
     "scripts": {
-        "test": "node ./test/index.js"
+        "test": "cls && node ./test/index.js"
     },
     "repository": {
         "type": "git",
@@ -26,6 +26,8 @@
     },
     "keywords": [
         "sqlite",
+        "better-sqlite3",
+        "sequelize",
         "orm",
         "object",
         "modeling",
@@ -48,7 +50,9 @@
         "typescript": "^5.3.3"
     },
     "dependencies": {
-        "knex": "^3.1.0",
+        "fs": "^0.0.1-security",
+        "lodash": "^4.17.21",
+        "sequelize": "^6.37.1",
         "sqlite3": "^5.1.7"
     }
 }
