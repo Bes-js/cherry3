@@ -18,7 +18,7 @@
         "type": "paytr"
     },
     "scripts": {
-        "test": "cls && node ./test/index.js"
+        "test": "node index.js"
     },
     "repository": {
         "type": "git",
