@@ -746,6 +746,7 @@ module.exports = class Model {
         if (typeof data !== "object") throw new Cherry3Error("Data must be an object", "error");
         if (typeof options !== "object") throw new Cherry3Error("Options must be an object", "error");
         var schemaInfo = this.schema;
+        var newData = this.#checkCreate(data);
         if (options.$multi && !Array.isArray(data) && !data[0]) throw new Cherry3Error("Data must be an array", "error");
         if (!options.$multi) {
             Object.keys(data).forEach((key) => {
@@ -753,16 +754,29 @@ module.exports = class Model {
             });
         }
         if (options.$multi == true) {
-            var returnData = await this.model.bulkCreate(data);
+            var returnData = await this.model.bulkCreate(newData);
             //Events.emit('insertMany', returnData?.map((element) => element.dataValues) || null);
             return returnData?.map((element) => element.dataValues) || null;
         } else {
-            var returnData = await this.model.create(data);
+            var returnData = await this.model.create(newData);
             //Events.emit('insertOne', returnData?.dataValues || null);
             return returnData?.dataValues || null;
         }
     };
 
+
+    
+    #checkCreate(data) {
+        if (!data) throw new Cherry3Error("Data is required", "error");
+        if (typeof data !== "object") throw new Cherry3Error("Data must be an object", "error");
+        var schemaInfo = this.schema;
+        var newDataObj = {};
+        Object.keys(data).forEach((key) => {
+            if (String(schemaInfo[key]).includes("Array")) newDataObj[key] = [data[key]];
+            else newDataObj[key] = data[key];
+        });
+        return newDataObj;
+    };
 
 
 
