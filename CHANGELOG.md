@@ -1,3 +1,5 @@
+## Version 3.0.2
+* The Error When Using $upsert While Performing $pull Operation has been Fixed.
 ## Version 3.0.0
 * It Has No Relevance With Old Versions, It Has Been Switched To The New ORM Structure, It Has Become Almost Completely Different, You Can Examine The Necessary Innovations Via Docs.
 ## Version 2.0.1
