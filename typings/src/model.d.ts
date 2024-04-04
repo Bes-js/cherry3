@@ -7,8 +7,6 @@ interface UpdateKeys {
    $pull?: object;
    $inc?: object;
    $dec?: object;
-   $pullAll?: object;
-   $pushAll?: object;
    $pop?: object;
 }
 
