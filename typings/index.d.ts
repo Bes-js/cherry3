@@ -30,14 +30,14 @@ import Model from './src/model';
      * @returns {Types}
      */
     declare const Types: {
-        Number: "number",
-        Float: "float",
-        Text: "text",
-        Date: "date",
-        String: "string",
-        Boolean: "boolean",
-        Array: "array",
-        Object: "object",
+        Number: "Number",
+        Float: "Float",
+        Text: "Text",
+        Date: "Date",
+        String: "String",
+        Boolean: "Boolean",
+        Array: "Array",
+        Object: "Object",
     };
 
     /**
