@@ -574,6 +574,7 @@ module.exports = class Model {
                                     await data.update({ [field]: arr });
                                 }
                             }
+                          /*
                             if (key == "$pull") {
                                 if (options.$multi == true) {
                                     var dataValue = await this.model.findAll({ where: filter });
@@ -625,7 +626,8 @@ module.exports = class Model {
                                     await data.update({ [field]: newArr });
                                 }
                             }
-                            if (key == "$pullAll") {
+                            */
+                            if (key == "$pull") {
                                 if (options.$multi == true) {
                                     var dataValue = await this.model.findAll({ where: filter });
                                     if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
@@ -645,7 +647,7 @@ module.exports = class Model {
                                     await data.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
                                 }
                             }
-                            if (key == "$pushAll") {
+                            if (key == "$push") {
                                 if (options.$multi == true) {
                                     var dataValue = await this.model.findAll({ where: filter });
                                     if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
