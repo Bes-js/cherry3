@@ -2,7 +2,7 @@
     "name": "cherry3",
     "description": "Cherry3 is a SQlite object modeling tool designed to work in an asynchronous environment.",
     "homepage": "https://fivesobes.gitbook.io/cherry3/",
-    "version": "3.0.3",
+    "version": "3.0.4",
     "author": {
         "name": "Bes-js",
         "url": "https://github.com/Bes-js"
