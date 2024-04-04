@@ -23,6 +23,9 @@ const { Sequelize, Op } = require('sequelize');
  */
 const db = new Sequelize({
   dialect: 'sqlite',
+  define: {
+    freezeTableName: true,
+  },
   storage: path.join(process.cwd(), filePath()),
   logging: false,
   host: 'localhost',
