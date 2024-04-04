@@ -49,7 +49,7 @@ declare class Model {
     collection: string;
     schema: object;
     schemaOptions?: object;
-    constructor(collection: string, schema: object, schemaOptions?: { $timestamps?: boolean, $alter?: boolean  });
+    constructor(collection: string, schema: object, schemaOptions?: { $timestamps?: boolean });
 
     find(filter: object | Record<any,findOperators>, options?: { $limit?:number, $skip?:number, $sort?:-1|1 }): Promise<object[] | any[]>;
 
