@@ -37,6 +37,7 @@ import Model from './src/model';
         String: "string",
         Boolean: "boolean",
         Array: "array",
+        Object: "object",
     };
 
     /**
