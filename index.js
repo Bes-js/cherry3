@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 const { db, DatabaseInformation } = require('./src/index');
 const Model = require('./src/model');
+const Cherry3Error = require('./src/errorHandler');
 
 const Types = {
     Number: "Number",
@@ -24,15 +25,15 @@ const Types = {
  */
 function Schema(values) {
     var types = ["Number", "Float", "Date", "String", "Boolean", "Array", "Object"];
-    if (!values) throw new Error("Schema fields is required");
-    if (typeof values !== "object") throw new Error("Schema must be an object");
+    if (!values) throw new Cherry3Error("Schema fields is required","error");
+    if (typeof values !== "object") throw new Cherry3Error("Schema must be an object","error");
     var obj = {};
     Object.keys(values).forEach((key) => {
-    if (!types.some(type => values[key]?.toString()?.includes(type) || values[key]?.type?.toString()?.includes(type))) throw new Error("Type is required or invalid for '" + values[key] + "' in schema.");
+    if (!types.some(type => values[key]?.toString()?.includes(type) || values[key]?.type?.toString()?.includes(type))) throw new Cherry3Error("Type is required or invalid for '" + values[key] + "' in schema.","error");
     obj[key] = values[key];
     });
     return values;
-}
+};
 
 
 module.exports = {
