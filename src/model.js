@@ -8,7 +8,7 @@ const { set } = require('lodash');
 const _ = require('lodash');
 
 module.exports = class Model {
-    constructor(collection, schema = {}, schemaOptions = { $timestamps: false, $alter: true }) {
+    constructor(collection, schema = {}, schemaOptions = { $timestamps: false }) {
         this.collection = collection;
         this.schema = schema;
         this.schemaOptions = schemaOptions;
