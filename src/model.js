@@ -233,7 +233,7 @@ module.exports = class Model {
         if (typeof update !== "object") throw new Cherry3Error("Update must be an object", "error");
         if (typeof options !== "object") throw new Cherry3Error("Options must be an object", "error");
         var schemaInfo = this.schema;
-        if (Object.keys(update).length == 0) throw new Cherry3Error("Update object is required", "warn");
+        //if (Object.keys(update).length == 0) throw new Cherry3Error("Update object is required", "warn");
 
         const operators = {
             $set: true,
@@ -242,8 +242,6 @@ module.exports = class Model {
             $dec: true,
             $push: true,
             $pull: true,
-            $pullAll: true,
-            $pushAll: true,
             $pop: true,
         };
 
@@ -319,7 +317,7 @@ module.exports = class Model {
                                 if (!Array.isArray(arr)) return;
                                 await data.update({ [field]: arr });
                             }
-
+                           /*
                             if (key == "$pull") {
                                 var data = await this.model.findOne({ where: { id } });
                                 if (!data) return
@@ -342,8 +340,8 @@ module.exports = class Model {
                                 if (!Array.isArray(newArr)) return;
                                 await data.update({ [field]: newArr });
                             }
-
-                            if (key == "$pullAll") {
+                           */
+                            if (key == "$pull") {
                                 var data = await this.model.findOne({ where: { id } });
                                 if (!data) return;
                                 if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
@@ -352,7 +350,7 @@ module.exports = class Model {
                                 if (!Array.isArray(arr)) return;
                                 await data.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
                             }
-                            if (key == "$pushAll") {
+                            if (key == "$push") {
                                 var data = await this.model.findOne({ where: { id } });
                                 if (!data) return;
                                 if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
@@ -381,7 +379,7 @@ module.exports = class Model {
                     }
                 } else {
                     if (!(key in operators)) throw new Cherry3Error(`Operator '${key}' does not exist`, "error");
-                    if (!schemaInfo[key]) throw new Cherry3Error(`Field '${key}' does not exist in collection '${collection}'`, "error");
+                    if (!schemaInfo[key] && !key.includes('.')) throw new Cherry3Error(`Field '${key}' does not exist in collection '${collection}'`, "error");
                 }
             }
 
@@ -431,7 +429,7 @@ module.exports = class Model {
         if (typeof update !== "object") throw new Cherry3Error("Update must be an object", "error");
         if (typeof options !== "object") throw new Cherry3Error("Options must be an object", "error");
         var schemaInfo = this.schema;
-        if (Object.keys(update).length == 0) throw new Cherry3Error("Update object is required", "warn");
+        //if (Object.keys(update).length == 0) throw new Cherry3Error("Update object is required", "warn");
         Object.keys(filter).forEach((key) => {
             if (!schemaInfo[key] && ![
                 '$and',
@@ -446,8 +444,6 @@ module.exports = class Model {
             $dec: true,
             $push: true,
             $pull: true,
-            $pullAll: true,
-            $pushAll: true,
             $pop: true,
         };
         var databaseDataValue = await this.model.findOne({ where: filter });
@@ -574,7 +570,7 @@ module.exports = class Model {
                                     await data.update({ [field]: arr });
                                 }
                             }
-                          /*
+                            /*
                             if (key == "$pull") {
                                 if (options.$multi == true) {
                                     var dataValue = await this.model.findAll({ where: filter });
@@ -627,6 +623,7 @@ module.exports = class Model {
                                 }
                             }
                             */
+                            
                             if (key == "$pull") {
                                 if (options.$multi == true) {
                                     var dataValue = await this.model.findAll({ where: filter });
@@ -665,6 +662,7 @@ module.exports = class Model {
                                     await data.update({ [field]: arr.concat(update[key][field]) });
                                 }
                             }
+                            
                             if (key == "$unset") {
                                 if (options.$multi == true) {
                                     var dataValue = await this.model.findAll({ where: filter });
@@ -752,7 +750,7 @@ module.exports = class Model {
         if (options.$multi && !Array.isArray(data) && !data[0]) throw new Cherry3Error("Data must be an array", "error");
         if (!options.$multi) {
             Object.keys(data).forEach((key) => {
-                if (!schemaInfo[key]) throw new Cherry3Error(`Field '${key}' does not exist in collection '${collection}'`, "error");
+                if (!schemaInfo[key] && !key.includes('.')) throw new Cherry3Error(`Field '${key}' does not exist in collection '${collection}'`, "error");
             });
         }
         if (options.$multi == true) {
