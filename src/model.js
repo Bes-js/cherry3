@@ -124,6 +124,11 @@ module.exports = class Model {
         return ex.allRows(options);
     }
 
+    async distinct(field) {
+        var ex = await this.#exec();
+        return ex.distinct(field);
+    };
+
 
     async #exec() {
         var collection = this.collection;
@@ -157,6 +162,7 @@ module.exports = class Model {
         this.model = dataModelSchema;
 
         return {
+            distinct: async (field, options = {}) => await this.#distinct(collection, field),
             find: async (filter = {}, options = {}) => await this.#find(collection, filter, { $multi: true, ...options }),
             findOne: async (filter = {}, options = {}) => await this.#find(collection, filter, { ...options, $multi: false }),
             findOneAndUpdate: async (filter = {}, update = {}, options = {}) => await this.#update(collection, filter, update, { ...options, $multi: false }),
@@ -179,6 +185,18 @@ module.exports = class Model {
             deleteColumn: async (columnName) => await this.#deleteColumn(columnName),
         };
     }
+
+
+      async #distinct(collection, field) {
+        if (!field) throw new Cherry3Error("Field is required", "error");
+        if (typeof field !== "string") throw new Cherry3Error("Field must be a string", "error");
+        var schemaInfo = this.schema;
+        if (!schemaInfo[field]) throw new Cherry3Error(`Field '${field}' does not exist in collection '${collection}'`, "error");
+        var data = await this.model.findAll({ attributes: [field], group: [field] });
+        var values = data.map((element) => element.dataValues[field]);
+        //Events.emit('distinct', values);
+        return values;
+    };
 
     async #renameColumn(oldName, newName) {
         if (!oldName) throw new Cherry3Error("Old name is required", "error");
