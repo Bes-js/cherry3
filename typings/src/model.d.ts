@@ -49,6 +49,8 @@ declare class Model {
     schemaOptions?: object;
     constructor(collection: string, schema: object, schemaOptions?: { $timestamps?: boolean });
 
+    distinct(columnName: string): Promise<any[]>;
+
     find(filter: object | Record<any,findOperators>, options?: { $limit?:number, $skip?:number, $sort?:-1|1 }): Promise<object[] | any[]>;
 
     findOne(filter: object | Record<any,findOperators>): Promise<object | null>;
