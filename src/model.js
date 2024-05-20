@@ -3,12 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { db } = require('./index');
 const dataModel = require('sequelize');
 const Cherry3Error = require('./errorHandler');
+const Cherry3Debug = require('./debugHandler');
 /*const Events = require('./events');*/
 const { set } = require('lodash');
 const _ = require('lodash');
 
+
+
 module.exports = class Model {
-    constructor(collection, schema = {}, schemaOptions = { $timestamps: false }) {
+    constructor(collection, schema = {}, schemaOptions = { 
+        $timestamps: false, 
+        $debug: false 
+    }) {
         this.collection = collection;
         this.schema = schema;
         this.schemaOptions = schemaOptions;
@@ -19,116 +25,136 @@ module.exports = class Model {
 
     async find(filter = {}, options = {}) {
         var ex = await this.#exec();
+        if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Find method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findById(filter.id, options);
         return ex.find(filter, options);
     }
 
     async findOne(filter = {}, options = {}) {
         var ex = await this.#exec();
+        if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindOne method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findById(filter.id, options);
         return ex.findOne(filter, options);
     }
 
     async findOneAndUpdate(filter = {}, update = {}, options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindOneAndUpdate method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndUpdate(filter.id, update, options);
         return ex.findOneAndUpdate(filter, update, options);
     }
 
     async findOneAndDelete(filter = {}, options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindOneAndDelete method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndDelete(filter.id, options);
         return ex.findOneAndDelete(filter, options);
     }
 
     async findById(id, options = {}) {
         var ex = await this.#exec();
+        if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindById method called with id: ${id} and options: ${JSON.stringify(options)}`);
         return ex.findById(id, options);
     }
 
     async findByIdAndUpdate(id, update = {}, options = {}) {
         var ex = await this.#exec();
+        if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindByIdAndUpdate method called with id: ${id}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         return ex.findByIdAndUpdate(id, update, options);
     }
 
     async findByIdAndDelete(id, options = {}) {
         var ex = await this.#exec();
+        if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindByIdAndDelete method called with id: ${id} and options: ${JSON.stringify(options)}`);
         return ex.findByIdAndDelete(id, options);
     }
 
     async insertOne(data, options = {}) {
         var ex = await this.#exec();
+        if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`InsertOne method called with data: ${JSON.stringify(data)} and options: ${JSON.stringify(options)}`);
         return ex.insertOne(data, options);
     }
 
     async insertMany(data) {
         var ex = await this.#exec();
+        if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`InsertMany method called with data: ${JSON.stringify(data)}`);
         return ex.insertMany(data);
     }
 
     async updateOne(filter = {}, update = {}, options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`UpdateOne method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndUpdate(filter.id, update, options);
         return ex.updateOne(filter, update, options);
     }
 
     async updateMany(filter = {}, update = {}, options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`UpdateMany method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         return ex.updateMany(filter, update, options);
     }
 
     async deleteOne(filter = {}, options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DeleteOne method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndDelete(filter.id, options);
         return ex.deleteOne(filter, options);
     }
 
     async deleteMany(filter = {}, options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DeleteMany method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         return ex.deleteMany(filter, options);
     }
 
     async create(data, options = {}) {
         await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Create method called with data: ${JSON.stringify(data)} and options: ${JSON.stringify(options)}`);
         var mod = await this.model.create(data, {});
         return mod;
     }
 
     async update(filter, update = {}, options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Update method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         return ex.update(filter, update, options);
     }
 
     async schemaInfo() {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`SchemaInfo method called`);
         return ex.schemaInfo();
     }
 
     async dropCollection() {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DropCollection method called`);
         return ex.dropCollection();
     }
 
     async renameColumn(oldName, newName) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`RenameColumn method called with oldName: ${oldName} and newName: ${newName}`);
         return ex.renameColumn(oldName, newName);
     }
 
     async deleteColumn(columnName) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DeleteColumn method called with columnName: ${columnName}`);
         return ex.deleteColumn(columnName);
     }
 
     async allRows(options = {}) {
         var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`AllRows method called with options: ${JSON.stringify(options)}`);
         return ex.allRows(options);
     }
 
-    async distinct(field) {
+    async distinct(field,group = false) {
         var ex = await this.#exec();
-        return ex.distinct(field);
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Distinct method called with field: ${field} and group: ${group}`);
+        return ex.distinct(field, group);
     };
-
 
     async #exec() {
         var collection = this.collection;
@@ -162,7 +188,7 @@ module.exports = class Model {
         this.model = dataModelSchema;
 
         return {
-            distinct: async (field, options = {}) => await this.#distinct(collection, field),
+            distinct: async (field, group = false) => await this.#distinct(collection, field, group),
             find: async (filter = {}, options = {}) => await this.#find(collection, filter, { $multi: true, ...options }),
             findOne: async (filter = {}, options = {}) => await this.#find(collection, filter, { ...options, $multi: false }),
             findOneAndUpdate: async (filter = {}, update = {}, options = {}) => await this.#update(collection, filter, update, { ...options, $multi: false }),
@@ -186,13 +212,12 @@ module.exports = class Model {
         };
     }
 
-
-      async #distinct(collection, field) {
+    async #distinct(collection, field, group = false) {
         if (!field) throw new Cherry3Error("Field is required", "error");
         if (typeof field !== "string") throw new Cherry3Error("Field must be a string", "error");
         var schemaInfo = this.schema;
         if (!schemaInfo[field]) throw new Cherry3Error(`Field '${field}' does not exist in collection '${collection}'`, "error");
-        var data = await this.model.findAll({ attributes: [field], group: [field] });
+        var data = await this.model.findAll({ attributes: [field], group: group == true ? [field] : undefined });
         var values = data.map((element) => element.dataValues[field]);
         //Events.emit('distinct', values);
         return values;
@@ -273,6 +298,10 @@ module.exports = class Model {
                 newObj = { ...newValues };
             });
 
+            Object.keys(newObj).forEach(async (key) => {
+            if (schemaInfo[key] == "Array" && !JSON.stringify(newObj[key]).startsWith("[") && !JSON.stringify(newObj[key]).endsWith("]")) newObj[key] = [newObj[key]];
+            });
+
             await this.#create(collection, newObj, options = { $multi: options.$multi == true ? true : false });
         } else {
 
@@ -283,7 +312,7 @@ module.exports = class Model {
                         try {
                             if (key == "$set") {
                                 var data = await this.model.findOne({ where: { id } });
-                                if (!data) return
+                                if (!data) return;
                                 if (field.includes(".")) {
                                     if (schemaInfo[field.split(".")[0]] !== "Object") throw new Cherry3Error(`Field '${field.split(".")[0]}' must be an object`, "error");
                                     var newValue = set(data.dataValues, field, update[key][field]);
@@ -294,7 +323,9 @@ module.exports = class Model {
                                     await data.update({ [newField]: null });
                                     await data.update({ [newField]: newObj });
                                 } else {
-                                    await data.update({ [field]: update[key][field] });
+                                    var dataValue = update[key][field];
+                                    if (schemaInfo[field] == "Array" && !JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) dataValue = [update[key][field]];
+                                    await data.update({ [field]: dataValue });
                                 }
                             }
                             if (key == "$inc") {
@@ -362,11 +393,26 @@ module.exports = class Model {
                             if (key == "$pull") {
                                 var data = await this.model.findOne({ where: { id } });
                                 if (!data) return;
-                                if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
+                                if(typeof update[key][field] == "function"){
+
+                                    var index = data.dataValues[field].findIndex(update[key][field]);
+                                    if(index == -1) return;
+
+                                    var arr = [...data.dataValues[field]];
+                                    var updateKey = data.dataValues[field].splice(index,1);
+                                    if(!Array.isArray(arr)) return;
+                                    if(!Array.isArray(updateKey)) return;
+
+                                    await data.update({ [field]: [] });
+                                    await data.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
+                                }else{
+                                if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array or function`, "error");
                                 var arr = [...data.dataValues[field]];
                                 var updateKey = [...update[key][field]];
                                 if (!Array.isArray(arr)) return;
+                                await data.update({ [field]: [] });
                                 await data.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
+                                }
                             }
                             if (key == "$push") {
                                 var data = await this.model.findOne({ where: { id } });
@@ -471,6 +517,11 @@ module.exports = class Model {
                 var newValues = update[key];
                 newObj = { ...filter, ...newValues };
             });
+
+            Object.keys(newObj).forEach(async (key) => {
+            if (schemaInfo[key] == "Array" && !JSON.stringify(newObj[key]).startsWith("[") && !JSON.stringify(newObj[key]).endsWith("]")) newObj[key] = [newObj[key]];
+            });
+
             await this.#create(collection, newObj, options = { $multi: options.$multi == true ? true : false });
         } else {
             for (var key of Object.keys(update)) {
@@ -489,7 +540,9 @@ module.exports = class Model {
                                         await this.model.update({ [newField]: null }, { where: filter });
                                         await this.model.update({ [newField]: newObj }, { where: filter });
                                     } else {
-                                        await this.model.update({ [field]: update[key][field] }, { where: filter });
+                                    var data = update[key][field];
+                                    if (schemaInfo[field] == "Array" && !JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) data = [update[key][field]];
+                                    await this.model.update({ [field]: data }, { where: filter });
                                     }
                                 } else {
                                     var data = await this.model.findOne({ where: filter });
@@ -655,11 +708,26 @@ module.exports = class Model {
                                 } else {
                                     var data = await this.model.findOne({ where: filter });
                                     if (!data) return;
-                                    if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
+                                    if(typeof update[key][field] == "function"){
+
+                                        var index = data.dataValues[field].findIndex(update[key][field]);
+                                        if(index == -1) return;
+
+                                        var arr = [...data.dataValues[field]];
+                                        var updateKey = data.dataValues[field].splice(index,1);
+                                        if(!Array.isArray(arr)) return;
+                                        if(!Array.isArray(updateKey)) return;
+
+                                        await data.update({ [field]: [] });
+                                        await data.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
+                                    }else{
+                                    if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array or function`, "error");
                                     var arr = [...data.dataValues[field]];
                                     var updateKey = [...update[key][field]];
                                     if (!Array.isArray(arr)) return;
+                                    await data.update({ [field]: [] });
                                     await data.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
+                                    }
                                 }
                             }
                             if (key == "$push") {
@@ -803,13 +871,6 @@ module.exports = class Model {
                     type: dataModel.DataTypes.STRING,
                     allowNull: requiredValue == true ? false : true,
                     defaultValue: schema[key]?.default || ""
-                };
-            }
-            if (schemaValue?.toString()?.includes("Float")) {
-                newSchema[key] = {
-                    type: dataModel.DataTypes.REAL,
-                    allowNull: requiredValue == true ? false : true,
-                    defaultValue: schema[key]?.default || 0.0
                 };
             }
             if (schemaValue?.toString()?.includes("Number")) {
