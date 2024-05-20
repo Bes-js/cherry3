@@ -7,7 +7,6 @@ const Cherry3Error = require('./src/errorHandler');
 
 const Types = {
     Number: "Number",
-    Float: "Float",
     Date: "Date",
     String: "String",
     Boolean: "Boolean",
@@ -24,7 +23,7 @@ const Types = {
  * @throws {Error} - If the schema is not provided or is not an object, or if a type is missing.
  */
 function Schema(values) {
-    var types = ["Number", "Float", "Date", "String", "Boolean", "Array", "Object"];
+    var types = ["Number", "Date", "String", "Boolean", "Array", "Object"];
     if (!values) throw new Cherry3Error("Schema fields is required","error");
     if (typeof values !== "object") throw new Cherry3Error("Schema must be an object","error");
     var obj = {};
@@ -41,5 +40,5 @@ module.exports = {
     Model,
     Types,
     Schema,
-    DatabaseInformation
+    DatabaseInformation,
 };
