@@ -1,5 +1,5 @@
-import { Sequelize } from 'sequelize';
-import Model from './src/model';
+import { Sequelize, TextDataTypeConstructor } from 'sequelize';
+import { Model, Schema } from './src/model';
 
     declare const db: Sequelize;
 
@@ -30,22 +30,23 @@ import Model from './src/model';
      * @returns {Types}
      */
     declare const Types: {
-        Number: "Number",
-        Float: "Float",
-        Text: "Text",
-        Date: "Date",
-        String: "String",
-        Boolean: "Boolean",
-        Array: "Array",
-        Object: "Object",
+        Number: NumberConstructor,
+        Date: DateConstructor,
+        String: StringConstructor,
+        Boolean: BooleanConstructor,
+        Array: ArrayConstructor,
+        Object: ObjectConstructor,
     };
 
+    
     /**
      * Represents a function that creates a schema object.
      * @param values - An object representing the schema values.
      * @returns A schema object.
      */
+    /*
     declare function Schema(values: Record<any, {type?:string,default?:any,required?:boolean}>|Record<any,any>): Record<any, {type?:string,default?:any,required?:boolean}>|Record<any,any>;
+    */
 
     
     /**
@@ -58,6 +59,7 @@ import Model from './src/model';
      * If the information is not available, it returns null.
      */
     declare function DatabaseInformation():{fileSize:string, lastModified:string, createdAt:string, uid:number} | null;
+
 
     export {
     db as Driver,
