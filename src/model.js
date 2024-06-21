@@ -1018,8 +1018,18 @@ module.exports = class Model {
             case '$lt': return { [dataModel.Op.lt]: field };
             case '$lte': return { [dataModel.Op.lte]: field };
             case '$ne': return { [dataModel.Op.ne]: field };
-            case '$in': return { [dataModel.Op.in]: field };
-            case '$nin': return { [dataModel.Op.notIn]: field };
+            case '$in': 
+            if (Array.isArray(field) && String(field).startsWith("[") && String(field).endsWith("]")) {
+                return { [dataModel.Op.in]: field };
+            } else {
+                return { [dataModel.Op.in]: [field] };
+            }
+            case '$nin': 
+            if (Array.isArray(field) && String(field).startsWith("[") && String(field).endsWith("]")) {
+                return { [dataModel.Op.notIn]: field };
+            } else {
+                return { [dataModel.Op.notIn]: [field] };
+            }
             case '$exists': return { [dataModel.Op.not]: field ? null : { [dataModel.Op.ne]: null } };
             case '$match': return { [dataModel.Op.match]: field };
             case '$or': return { [dataModel.Op.or]: field };
@@ -1097,7 +1107,7 @@ module.exports = class Model {
     for (const stage of pipeline) {
         if (stage.$match) {
             for (const [key, value] of Object.entries(stage.$match)) {
-                if (typeof value === 'object') {
+                 if (typeof value == 'object' && String(value).includes('.')) {
                     for (const [op, opValue] of Object.entries(value)) {
                         if (!_.has(query.where, key)) _.set(query.where, key, {});
                         _.merge(_.get(query.where, key), applyOperator(opValue, op));
