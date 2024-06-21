@@ -28,132 +28,150 @@ module.exports = class Model {
         if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Find method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findById(filter.id, options);
         return ex.find(filter, options);
-    }
+    };
 
     async findOne(filter = {}, options = {}) {
         var ex = await this.#exec();
         if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindOne method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findById(filter.id, options);
         return ex.findOne(filter, options);
-    }
+    };
 
     async findOneAndUpdate(filter = {}, update = {}, options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindOneAndUpdate method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndUpdate(filter.id, update, options);
         return ex.findOneAndUpdate(filter, update, options);
-    }
+    };
 
     async findOneAndDelete(filter = {}, options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindOneAndDelete method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndDelete(filter.id, options);
         return ex.findOneAndDelete(filter, options);
-    }
+    };
 
     async findById(id, options = {}) {
         var ex = await this.#exec();
         if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindById method called with id: ${id} and options: ${JSON.stringify(options)}`);
         return ex.findById(id, options);
-    }
+    };
 
     async findByIdAndUpdate(id, update = {}, options = {}) {
         var ex = await this.#exec();
         if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindByIdAndUpdate method called with id: ${id}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         return ex.findByIdAndUpdate(id, update, options);
-    }
+    };
 
     async findByIdAndDelete(id, options = {}) {
         var ex = await this.#exec();
         if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`FindByIdAndDelete method called with id: ${id} and options: ${JSON.stringify(options)}`);
         return ex.findByIdAndDelete(id, options);
-    }
+    };
 
     async insertOne(data, options = {}) {
         var ex = await this.#exec();
         if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`InsertOne method called with data: ${JSON.stringify(data)} and options: ${JSON.stringify(options)}`);
         return ex.insertOne(data, options);
-    }
+    };
 
     async insertMany(data) {
         var ex = await this.#exec();
         if(this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`InsertMany method called with data: ${JSON.stringify(data)}`);
         return ex.insertMany(data);
-    }
+    };
 
     async updateOne(filter = {}, update = {}, options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`UpdateOne method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndUpdate(filter.id, update, options);
         return ex.updateOne(filter, update, options);
-    }
+    };
 
     async updateMany(filter = {}, update = {}, options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`UpdateMany method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         return ex.updateMany(filter, update, options);
-    }
+    };
 
     async deleteOne(filter = {}, options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DeleteOne method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         if (filter.id) return await this.findByIdAndDelete(filter.id, options);
         return ex.deleteOne(filter, options);
-    }
+    };
 
     async deleteMany(filter = {}, options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DeleteMany method called with filter: ${JSON.stringify(filter)} and options: ${JSON.stringify(options)}`);
         return ex.deleteMany(filter, options);
-    }
+    };
 
     async create(data, options = {}) {
         await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Create method called with data: ${JSON.stringify(data)} and options: ${JSON.stringify(options)}`);
         var mod = await this.model.create(data, {});
         return mod;
-    }
+    };
 
     async update(filter, update = {}, options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Update method called with filter: ${JSON.stringify(filter)}, update: ${JSON.stringify(update)} and options: ${JSON.stringify(options)}`);
         return ex.update(filter, update, options);
-    }
+    };
 
     async schemaInfo() {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`SchemaInfo method called`);
         return ex.schemaInfo();
-    }
+    };
 
     async dropCollection() {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DropCollection method called`);
         return ex.dropCollection();
-    }
+    };
 
     async renameColumn(oldName, newName) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`RenameColumn method called with oldName: ${oldName} and newName: ${newName}`);
         return ex.renameColumn(oldName, newName);
-    }
+    };
 
     async deleteColumn(columnName) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`DeleteColumn method called with columnName: ${columnName}`);
         return ex.deleteColumn(columnName);
-    }
+    };
 
     async allRows(options = {}) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`AllRows method called with options: ${JSON.stringify(options)}`);
         return ex.allRows(options);
-    }
+    };
 
     async distinct(field,group = false) {
         var ex = await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Distinct method called with field: ${field} and group: ${group}`);
         return ex.distinct(field, group);
+    };
+
+    async aggregate(pipeline) {
+    var ex = await this.#exec();
+    if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Aggregate method called with pipeline: ${JSON.stringify(pipeline)}`);
+    return ex.aggregate(pipeline);
+    };
+
+    async inspect() {
+        var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Inspect method called`);
+        return ex.inspect();
+    };
+
+    async countDocuments(filter = {}) {
+        var ex = await this.#exec();
+        if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`CountDocuments method called with filter: ${JSON.stringify(filter)}`);
+        return ex.countDocuments(filter);
     };
 
     async #exec() {
@@ -188,6 +206,9 @@ module.exports = class Model {
         this.model = dataModelSchema;
 
         return {
+            inspect: async () => await this.#inspect(collection),
+            countDocuments: async (filter = {}) => await this.#countDocuments(collection, filter),
+            aggregate: async (pipeline) => await this.#aggregate(pipeline),
             distinct: async (field, group = false) => await this.#distinct(collection, field, group),
             find: async (filter = {}, options = {}) => await this.#find(collection, filter, { $multi: true, ...options }),
             findOne: async (filter = {}, options = {}) => await this.#find(collection, filter, { ...options, $multi: false }),
@@ -211,6 +232,32 @@ module.exports = class Model {
             deleteColumn: async (columnName) => await this.#deleteColumn(columnName),
         };
     }
+
+    async #inspect(collection) {
+        return collection;
+    };
+
+    async #countDocuments(collection, filter = {}) {
+        if (!collection || typeof collection !== "string" || collection == "") throw new Cherry3Error("Collection name is required", "error");
+        if (!filter) throw new Cherry3Error("Filter is required", "error");
+        if (typeof filter !== "object") throw new Cherry3Error("Filter must be an object", "error");
+        var data = await this.model.count({ where: filter });
+        //Events.emit('count', data);
+        return data;
+    };
+
+    async #aggregate(pipeline) {
+    if (!pipeline) throw new Cherry3Error("Pipeline is required", "error");
+    if (!Array.isArray(pipeline)) throw new Cherry3Error("Pipeline must be an array", "error");
+    var convertedData = this.#aggregateConvert(pipeline);
+    if(convertedData == null) throw new Cherry3Error("An Unknown Error Occurred While Converting the Pipeline", "error");
+    if(convertedData?.attributes?.length == 0) delete convertedData.attributes;
+    var data = await this.model.findAll(convertedData);
+    //Events.emit('aggregate', data);
+    if(!data || data.length == 0) return [];
+    return data.map((element) => element.dataValues);
+    };
+
 
     async #distinct(collection, field, group = false) {
         if (!field) throw new Cherry3Error("Field is required", "error");
@@ -950,6 +997,186 @@ module.exports = class Model {
         }
         return arr;
     }
+
+
+
+  #aggregateConvert(pipeline) {
+    const query = {
+        where: {},
+        attributes: [],
+        group: [],
+        order: [],
+        limit: null,
+        offset: null
+    };
+
+    const applyOperator = (field, operator) => {
+        switch (operator) {
+            case '$eq': return { [dataModel.Op.eq]: field };
+            case '$gt': return { [dataModel.Op.gt]: field };
+            case '$gte': return { [dataModel.Op.gte]: field };
+            case '$lt': return { [dataModel.Op.lt]: field };
+            case '$lte': return { [dataModel.Op.lte]: field };
+            case '$ne': return { [dataModel.Op.ne]: field };
+            case '$in': return { [dataModel.Op.in]: field };
+            case '$nin': return { [dataModel.Op.notIn]: field };
+            case '$exists': return { [dataModel.Op.not]: field ? null : { [dataModel.Op.ne]: null } };
+            case '$match': return { [dataModel.Op.match]: field };
+            case '$or': return { [dataModel.Op.or]: field };
+            case '$and': return { [dataModel.Op.and]: field };
+            case '$notRegexp': return { [dataModel.Op.notRegexp]: field };
+            case '$iRegexp': return { [dataModel.Op.iRegexp]: field };
+            case '$notIRegexp': return { [dataModel.Op.notIRegexp]: field };
+            case '$overlap': return { [dataModel.Op.overlap]: field };
+            case '$adjacent': return { [dataModel.Op.adjacent]: field };
+            case '$strictLeft': return { [dataModel.Op.strictLeft]: field };
+            case '$strictRight': return { [dataModel.Op.strictRight]: field };
+            case '$noExtendRight': return { [dataModel.Op.noExtendRight]: field };
+            case '$noExtendLeft': return { [dataModel.Op.noExtendLeft]: field };
+            case '$col': return { [dataModel.Op.col]: field };
+            case '$substring': return { [dataModel.Op.substring]: field };
+            case '$placeholder': return { [dataModel.Op.placeholder]: field };
+            case '$regex': return { [dataModel.Op.regexp]: field };
+            case '$all': return { [dataModel.Op.contains]: field };
+            case '$startsWith': return { [dataModel.Op.startsWith]: field };
+            case '$endsWith': return { [dataModel.Op.endsWith]: field };
+            case '$like': return { [dataModel.Op.like]: field };
+            case '$notLike': return { [dataModel.Op.notLike]: field };
+            case '$iLike': return { [dataModel.Op.iLike]: field };
+            case '$notILike': return { [dataModel.Op.notILike]: field };
+            case '$overlap': return { [dataModel.Op.overlap]: field };
+            case '$contains': return { [dataModel.Op.contains]: field };
+            case '$contained': return { [dataModel.Op.contained]: field };
+            case '$any': return { [dataModel.Op.any]: field };
+            case '$between': return { [dataModel.Op.between]: field };
+            case '$notBetween': return { [dataModel.Op.notBetween]: field };
+            case '$is': return { [dataModel.Op.is]: field };
+            case '$type':
+                switch (field) {
+                    case 'string': return { [dataModel.Op.is]: dataModel.DataTypes.STRING };
+                    case 'number': return { [dataModel.Op.is]: dataModel.DataTypes.INTEGER };
+                    case 'boolean': return { [dataModel.Op.is]: dataModel.DataTypes.BOOLEAN };
+                    case 'date': return { [dataModel.Op.is]: dataModel.DataTypes.DATE };
+                    case 'json': return { [dataModel.Op.is]: dataModel.DataTypes.JSON };
+                    case 'object': return { [dataModel.Op.is]: dataModel.DataTypes.JSON };
+                    case 'array': return { [dataModel.Op.is]: dataModel.DataTypes.JSON };
+                    default: return field;
+                };
+            case '$col': return dataModel.Sequelize.col(field);
+            case '$literal': return dataModel.Sequelize.literal(field);
+            case '$fn': return dataModel.Sequelize.fn(field);
+            case '$json': return dataModel.Sequelize.json(field);
+            case '$cast': return dataModel.Sequelize.cast(field);
+            case '$size': return dataModel.Sequelize.fn('JSONB_ARRAY_LENGTH', dataModel.Sequelize.col(field));
+            case '$ceil': return dataModel.Sequelize.fn('CEIL', dataModel.Sequelize.col(field));
+            case '$floor': return dataModel.Sequelize.fn('FLOOR', dataModel.Sequelize.col(field));
+            case '$round': return dataModel.Sequelize.fn('ROUND', dataModel.Sequelize.col(field));
+            case '$abs': return dataModel.Sequelize.fn('ABS', dataModel.Sequelize.col(field));
+            case '$sqrt': return dataModel.Sequelize.fn('SQRT', dataModel.Sequelize.col(field));
+            case '$log': return dataModel.Sequelize.fn('LOG', dataModel.Sequelize.col(field));
+            case '$log2': return dataModel.Sequelize.fn('LOG2', dataModel.Sequelize.col(field));
+            case '$log10': return dataModel.Sequelize.fn('LOG10', dataModel.Sequelize.col(field));
+            case '$exp': return dataModel.Sequelize.fn('EXP', dataModel.Sequelize.col(field));
+            case '$pow': return dataModel.Sequelize.fn('POW', dataModel.Sequelize.col(field));
+            case '$acos': return dataModel.Sequelize.fn('ACOS', dataModel.Sequelize.col(field));
+            case '$asin': return dataModel.Sequelize.fn('ASIN', dataModel.Sequelize.col(field));
+            case '$atan': return dataModel.Sequelize.fn('ATAN', dataModel.Sequelize.col(field));
+            case '$cos': return dataModel.Sequelize.fn('COS', dataModel.Sequelize.col(field));
+            case '$cot': return dataModel.Sequelize.fn('COT', dataModel.Sequelize.col(field));
+            case '$sin': return dataModel.Sequelize.fn('SIN', dataModel.Sequelize.col(field));
+            case '$tan': return dataModel.Sequelize.fn('TAN', dataModel.Sequelize.col(field));
+            case '$radians': return dataModel.Sequelize.fn('RADIANS', dataModel.Sequelize.col(field));
+            case '$degrees': return dataModel.Sequelize.fn('DEGREES', dataModel.Sequelize.col(field));
+            case '$random': return dataModel.Sequelize.fn('RANDOM', dataModel.Sequelize.col(field));
+            default: return field;
+        }
+    };
+
+    let facets = {};
+
+    for (const stage of pipeline) {
+        if (stage.$match) {
+            for (const [key, value] of Object.entries(stage.$match)) {
+                if (typeof value === 'object') {
+                    for (const [op, opValue] of Object.entries(value)) {
+                        if (!_.has(query.where, key)) _.set(query.where, key, {});
+                        _.merge(_.get(query.where, key), applyOperator(opValue, op));
+                    }
+                } else {
+                    _.set(query.where, key, value);
+                }
+            }
+        } else if (stage.$group) {
+            const groupBy = [];
+            const groupAttrs = [];
+            for (const [key, value] of Object.entries(stage.$group)) {
+                if (key === 'id') {
+                    query.group = value;
+                    groupAttrs.push([dataModel.Sequelize.col(value), key]);
+                } else {
+                    if (typeof value === 'object' && value.$sum) {
+                        groupBy.push([dataModel.Sequelize.fn('SUM', dataModel.Sequelize.col(value.$sum)), key]);
+                    } else if (typeof value === 'object' && value.$avg) {
+                        groupBy.push([dataModel.Sequelize.fn('AVG', dataModel.Sequelize.col(value.$avg)), key]);
+                    } else if (typeof value === 'object' && value.$min) {
+                        groupBy.push([dataModel.Sequelize.fn('MIN', dataModel.Sequelize.col(value.$min)), key]);
+                    } else if (typeof value === 'object' && value.$max) {
+                        groupBy.push([dataModel.Sequelize.fn('MAX', dataModel.Sequelize.col(value.$max)), key]);
+                    } else if (typeof value === 'object' && value.$count) {
+                        groupBy.push([dataModel.Sequelize.fn('COUNT', dataModel.Sequelize.col(value.$count)), key]);
+                    } else {
+                        groupBy.push([dataModel.Sequelize.col(value), key]);
+                    }
+                }
+            }
+            query.attributes = [...groupAttrs, ...groupBy];
+        } else if (stage.$sort) {
+            query.order = Object.entries(stage.$sort).map(([key, value]) => [key, value === 1 ? 'ASC' : 'DESC']);
+        } else if (stage.$skip) {
+            query.offset = stage.$skip;
+        } else if (stage.$limit) {
+            query.limit = stage.$limit;
+        } else if (stage.$project) {
+            query.attributes = Object.keys(stage.$project).filter(key => stage.$project[key]);
+        } else if (stage.$facet) {
+            facets = stage.$facet;
+        } else if (stage.$unwind) {
+            query.attributes.push([dataModel.Sequelize.literal(`JSON_ARRAY_ELEMENTS(${stage.$unwind})`), stage.$unwind]);
+        } else if (stage.$addFields) {
+            for (const [key, value] of Object.entries(stage.$addFields)) {
+                query.attributes.push([dataModel.Sequelize.literal(`${typeof value == 'string' ? `'${value}'` : `${value}`}`), key]);
+            }
+        } else if (stage.$unset) {
+            for (const field of stage.$unset) {
+                query.attributes = query.attributes.filter(attr => attr[1] !== field);
+            }
+        } else if (stage.$set) {
+            for (const [key, value] of Object.entries(stage.$set)) {
+                query.attributes.push([dataModel.Sequelize.literal(`${typeof value == 'string' ? `'${value}'` : `${value}`}`), key]);
+            }
+        } else if (stage.$count) {
+            query.attributes.push([dataModel.Sequelize.fn('COUNT', dataModel.Sequelize.col(stage.$count)), 'count']);
+        } else if (stage.$search) {
+            const searchField = Object.keys(stage.$search.text.path).join(', ');
+            const searchTerm = stage.$search.text.query;
+            query.where[searchField] = { [dataModel.Op.like]: `%${searchTerm}%` };
+        }
+    }
+
+    var results = query;
+
+    if (Object.keys(facets).length > 0) {
+        const facetResults = {};
+        for (const [facetKey, facetPipeline] of Object.entries(facets)) {
+            facetResults[facetKey] = this.#aggregateConvert(facetPipeline);
+        }
+        results = facetResults;
+    }
+
+    return results;
+}
+
+
 
 
 }
