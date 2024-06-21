@@ -187,7 +187,7 @@ interface aggregateOperators {
 interface aggregateOptions<T extends SchemaDefinition> {
     $match?: Partial<ExtractSchemaType<T> | Record<any, aggregateOperators>>;
     $group?: Partial<ExtractSchemaType<T> | Record<any, aggregateOperators>>;
-    $sort?: Partial<ExtractSchemaType<T> | 1 | -1>;
+    $sort?: Partial<Record<keyof ExtractSchemaType<T>, 1 | -1>>;
     $skip?: number;
     $limit?: number;
     $project?: Partial<Record<keyof ExtractSchemaType<T>, 1 | 0 | true | false>>;
