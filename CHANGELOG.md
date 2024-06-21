@@ -1,3 +1,6 @@
+## Version 5.0.0
+* Schema Types and TypeScript Support Improved.
+* countDocuments(), inspect(), aggregate() Functions Added.
 ## Version 4.0.0
 * Fully Supported Schema Returns and Typing with TypeScript Added.
 * $pull Structure Has Become Both Function Supported and Normal Array Supported.
