@@ -183,10 +183,19 @@ interface aggregateOperators {
     $random?: any;
 }
 
+interface groupOptions<T extends SchemaDefinition> {
+    $sum?: keyof ExtractSchemaType<T>;
+    $avg?: keyof ExtractSchemaType<T>;
+    $min?: keyof ExtractSchemaType<T>;
+    $max?: keyof ExtractSchemaType<T>;
+    $count?: keyof ExtractSchemaType<T>;
+    $col?: keyof ExtractSchemaType<T>;
+}
+
 
 interface aggregateOptions<T extends SchemaDefinition> {
     $match?: Partial<ExtractSchemaType<T> | Record<any, aggregateOperators>>;
-    $group?: Partial<ExtractSchemaType<T> | Record<any, aggregateOperators>>;
+    $group?: Partial<ExtractSchemaType<T> | Record<any, Partial<groupOptions<T>>>>;
     $sort?: Partial<Record<keyof ExtractSchemaType<T>, 1 | -1>>;
     $skip?: number;
     $limit?: number;
