@@ -217,7 +217,7 @@ async function backupInterval() {
       if (isNaN(json?.backupInterval)) throw new Cherry3Error("Backup interval must be a number", "error");
       if (json?.backupInterval < 5000) throw new Cherry3Error("Backup interval must be greater than 60000", "error");
       setInterval(() => {
-        var backup = path.join(process.cwd(), filePath())
+        var backup = path.join(process.cwd(), filePath()?.filePathOrConnectionURI)
         fs.writeFileSync(path.join(process.cwd(), json?.backupPath), fs.readFileSync(backup));
         //Events.emit('backupCreated');
         if (json?.backupAlert) console.log(`\u001b[36m[SQLITE]\u001b[0m \u001b[32mBackup created\u001b[0m \u001b[33m${new Date().toLocaleString()}\u001b[0m`);
