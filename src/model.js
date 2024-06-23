@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { db } = require('./index');
+const { db, filePath } = require('./index');
 const dataModel = require('sequelize');
 const Cherry3Error = require('./errorHandler');
 const Cherry3Debug = require('./debugHandler');
@@ -744,14 +744,30 @@ module.exports = class Model {
                             
                             if (key == "$pull") {
                                 if (options.$multi == true) {
-                                    var dataValue = await this.model.findAll({ where: filter });
-                                    if (!JSON.stringify(update[key][field]).startsWith("[") && !JSON.stringify(update[key][field]).endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
+                                    var dataValue = await this.model.findAll({ where: filter, raw: false });
+                                    if(typeof update[key][field] == "function"){
+                                        dataValue.forEach(async (data) => {
+                                        var index = data.dataValues[field].findIndex(update[key][field]);
+                                        if(index == -1) return;
+
+                                        var arr = [...data.dataValues[field]];
+                                        var updateKey = data.dataValues[field].splice(index,1);
+                                        if(!Array.isArray(arr)) return;
+                                        if(!Array.isArray(updateKey)) return;
+
+                                        await data.update({ [field]: [] });
+                                        await data.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
+                                        });
+                                    }else{
+
+                                    if (!JSON.stringify(update[key][field])?.startsWith("[") && !JSON.stringify(update[key][field])?.endsWith("]")) throw new Cherry3Error(`Field '${field}' must be an array`, "error");
                                     dataValue.forEach(async (element) => {
                                         var arr = [...element.dataValues[field]];
                                         var updateKey = [...update[key][field]];
                                         if (!Array.isArray(arr)) return;
                                         await element.update({ [field]: arr.filter((value) => !updateKey.includes(value)) });
                                     });
+                                   }
                                 } else {
                                     var data = await this.model.findOne({ where: filter });
                                     if (!data) return;
@@ -922,7 +938,7 @@ module.exports = class Model {
             }
             if (schemaValue?.toString()?.includes("Number")) {
                 newSchema[key] = {
-                    type: dataModel.DataTypes.NUMBER,
+                    type: filePath()?.databaseType == "sqlite" ? dataModel.DataTypes.NUMBER : dataModel.DataTypes.FLOAT,
                     allowNull: requiredValue == true ? false : true,
                     defaultValue: schema[key]?.default || 0
                 };
