@@ -60,6 +60,6 @@
     "dependencies": {
         "fs": "^0.0.1-security",
         "lodash": "^4.17.21",
-        "sequelize": "^6.37.1",
+        "sequelize": "^6.37.1"
     }
 }
