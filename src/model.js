@@ -5,7 +5,7 @@ const dataModel = require('sequelize');
 const Cherry3Error = require('./errorHandler');
 const Cherry3Debug = require('./debugHandler');
 /*const Events = require('./events');*/
-const { set } = require('lodash');
+const { set, unset } = require('lodash');
 const _ = require('lodash');
 
 
@@ -13,7 +13,7 @@ const _ = require('lodash');
 module.exports = class Model {
     constructor(collection, schema = {}, schemaOptions = { 
         $timestamps: false, 
-        $debug: false 
+        $debug: false
     }) {
         this.collection = collection;
         this.schema = schema;
@@ -111,7 +111,7 @@ module.exports = class Model {
         await this.#exec();
         if (this.schemaOptions.$debug == true) Cherry3Debug.sendLogMessage(`Create method called with data: ${JSON.stringify(data)} and options: ${JSON.stringify(options)}`);
         var mod = await this.model.create(data, {});
-        return mod;
+        return mod?.dataValues || null;
     };
 
     async update(filter, update = {}, options = {}) {
@@ -473,15 +473,17 @@ module.exports = class Model {
                                 var data = await this.model.findOne({ where: { id } });
                                 if (!data) return;
                                 if (field.includes(".")) {
-                                    var newValue = set(data.dataValues, field, null);
+                                    var dataTitleObjectName = field.split(".")[0];
+                                        
+                                    var newValue = unset(data.dataValues[dataTitleObjectName], field.split(".").slice(1).join("."));
                                     if (!newValue) continue;
                                     var newField = field.split(".")[0];
                                     if (!newField) continue;
-                                    var newObj = { ...newValue[newField] }
+                                    var newObj = data.dataValues[dataTitleObjectName];
                                     await data.update({ [newField]: null });
                                     await data.update({ [newField]: newObj });
                                 } else {
-                                    await data.update({ [field]: null });
+                                    await data.update({ [field]: {} });
                                 }
                             }
                         } catch (error) {
@@ -575,7 +577,7 @@ module.exports = class Model {
                 if (key in operators) {
                     for (var field of Object.keys(update[key])) {
                         if (!schemaInfo[field] && !field.includes(".")) throw new Cherry3Error(`Field '${field}' does not exist in collection '${collection}'`, "error");
-                        try {
+                       // try {
                             if (key == "$set") {
                                 if (options.$multi == true) {
                                     if (field.includes(".")) {
@@ -817,34 +819,44 @@ module.exports = class Model {
                                     var dataValue = await this.model.findAll({ where: filter });
                                     dataValue.forEach(async (element) => {
                                         if (field.includes(".")) {
-                                            var newValue = set(element.dataValues, field, null);
+                                            var dataTitleObjectName = field.split(".")[0];
+                                        
+                                            var newValue = unset(element.dataValues[dataTitleObjectName], field.split(".").slice(1).join("."));
                                             if (!newValue) return;
                                             var newField = field.split(".")[0];
                                             if (!newField) return;
-                                            var newObj = { ...newValue[newField] }
+                                            var newObj = element.dataValues[dataTitleObjectName];
                                             await element.update({ [newField]: null });
                                             await element.update({ [newField]: newObj });
                                         } else {
-                                            await element.update({ [field]: null });
+                                            await element.update({ [field]: {} });
                                         }
                                     });
                                 } else {
                                     if (field.includes(".")) {
-                                        var newValue = set(data.dataValues, field, null);
+                                        var data = await this.model.findOne({ where: filter });
+                                        if (!data) return;
+                                        var dataTitleObjectName = field.split(".")[0];
+                                        
+                                        var newValue = unset(data.dataValues[dataTitleObjectName], field.split(".").slice(1).join("."));
                                         if (!newValue) continue;
                                         var newField = field.split(".")[0];
                                         if (!newField) continue;
-                                        var newObj = { ...newValue[newField] }
+                                        var newObj = data.dataValues[dataTitleObjectName];
                                         await data.update({ [newField]: null });
                                         await data.update({ [newField]: newObj });
                                     } else {
-                                        await data.update({ [field]: null });
+                                        var data = await this.model.findOne({ where: filter });
+                                        if (!data) return;
+                                        await data.update({ [field]: {} });
                                     }
                                 }
                             }
+                        /*
                         } catch (error) {
                             throw new Cherry3Error(error.message, "error");
                         }
+                            */
                     }
                 } else {
                     if (!(key in operators)) throw new Cherry3Error(`Operator '${key}' does not exist`, "error");
@@ -909,6 +921,7 @@ module.exports = class Model {
         } else {
             var returnData = await this.model.create(data);
             //Events.emit('insertOne', returnData?.dataValues || null);
+            
             return returnData?.dataValues || null;
         }
     };
@@ -931,7 +944,7 @@ module.exports = class Model {
             }
             if (schemaValue?.toString()?.includes("String")) {
                 newSchema[key] = {
-                    type: dataModel.DataTypes.STRING,
+                    type: filePath()?.databaseType == "sqlite" ?  dataModel.DataTypes.STRING : dataModel.DataTypes.TEXT,
                     allowNull: requiredValue == true ? false : true,
                     defaultValue: schema[key]?.default || ""
                 };
