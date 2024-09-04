@@ -107,7 +107,7 @@ type ExtractSchemaReturnType<T extends SchemaDefinition> = {
 
 interface UpdateTypes<T extends SchemaDefinition> {
     $set?: Partial<ExtractSchemaType<T>>;
-    $unset?: Partial<ExtractSchemaType<T>>;
+    $unset?: Partial<ExtractSchemaType<T>> & Partial<Record<string, any>>;
     $push?: Partial<ExtractSchemaType<T>>;
     $pull?: Partial<ExtractSchemaType<T>>;
     $inc?: Partial<ExtractSchemaType<T>>;
@@ -340,7 +340,7 @@ declare class Model<T extends SchemaDefinition> {
    */
   findByIdAndUpdate(
     id: number,
-    update: UpdateKeys,
+    update: UpdateTypes<T>,
     options?: { $upsert?: boolean; $multiPull?: boolean }
   ): Promise<ExtractSchemaReturnType<T> & object & returnTypes | null>;
 
