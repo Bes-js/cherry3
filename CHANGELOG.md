@@ -1,3 +1,6 @@
+## Version 5.2.0
+* Fixed TypeScript Typing, Synchronized updateOne, UpdateMany, find and allRows $sort Type and Schema Parameters.
+* The errors in the Update Operators $set and $unset have been corrected, the Object Structure now works smoothly.
 ## Version 5.0.0
 * Schema Types and TypeScript Support Improved.
 * countDocuments(), inspect(), aggregate() Functions Added.
