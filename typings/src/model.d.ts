@@ -280,7 +280,7 @@ declare class Model<T extends SchemaDefinition> {
    */
   find(
     filter?: Partial<ExtractSchemaType<T>> | Record<string, FindOperators>,
-    options?: { $limit?: number; $skip?: number; $sort?: -1 | 1 }
+    options?: { $limit?: number; $skip?: number; $sort?: { [K in keyof Partial<ExtractSchemaType<T>>]: 1 | -1 }  }
   ): Promise<(ExtractSchemaType<T> & object & returnTypes)[] | []>;
 
   /**
@@ -383,7 +383,7 @@ declare class Model<T extends SchemaDefinition> {
    */
   updateOne(
     filter: Partial<ExtractSchemaType<T>> | Record<string, FindOperators>,
-    update: UpdateKeys,
+    update: UpdateTypes<T>,
     options?: { $upsert?: boolean; $multiPull?: boolean }
   ): Promise<ExtractSchemaReturnType<T> & object & returnTypes | null>;
 
@@ -398,7 +398,7 @@ declare class Model<T extends SchemaDefinition> {
    */
   updateMany(
     filter: Partial<ExtractSchemaType<T>> | Record<string, FindOperators>,
-    update: UpdateKeys,
+    update: UpdateTypes<T>,
     options?: { $upsert?: boolean; $multiPull?: boolean }
   ): Promise<(ExtractSchemaReturnType<T> & object & returnTypes)[] | any[] | any | null>;
 
@@ -462,7 +462,7 @@ declare class Model<T extends SchemaDefinition> {
    */
   update(
     filter: Partial<ExtractSchemaType<T>> | Record<string, FindOperators>,
-    update: UpdateKeys,
+    update: UpdateTypes<T>,
     options?: { $multi?: true; $upsert?: boolean; $multiPull?: boolean }
   ): Promise<ExtractSchemaReturnType<T> & object & returnTypes | null>;
 
@@ -514,7 +514,7 @@ declare class Model<T extends SchemaDefinition> {
    * @returns {Promise<object[] | []>}
    * @example await model.allRows({ $limit: 10, $skip: 0, $sort: 1 });
    */
-  allRows(options?: { $limit?: number; $skip?: number; $sort?: -1 | 1 }): Promise<(ExtractSchemaReturnType<T> & object & returnTypes)[] | []>;
+  allRows(options?: { $limit?: number; $skip?: number; $sort?: { [K in keyof Partial<ExtractSchemaType<T>>]: 1 | -1 } }): Promise<(ExtractSchemaReturnType<T> & object & returnTypes)[] | []>;
 }
 
 export { Model, Schema };
